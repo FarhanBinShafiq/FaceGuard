@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Environment
+.env
+venv/
+.venv/
+
+# Runtime data
+backend/data/facerecog.db
+backend/data/faiss_index.bin
+backend/data/user_map.json
+backend/data/images/*.jpg
+backend/data/images/*.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+*.log
+
+# InsightFace model cache
+~/.insightface/
