@@ -42,7 +42,7 @@ class Settings(BaseSettings):
 
     # ── Security ─────────────────────────────────────────
     API_KEY: str = ""  # Set via env var for production
-    CORS_ORIGINS: list = ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"]
+    CORS_ORIGINS: list = ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://192.168.0.169:5173"]
 
     class Config:
         env_file = ".env"

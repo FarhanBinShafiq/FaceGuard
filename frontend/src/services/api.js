@@ -2,7 +2,7 @@
  * API Client for the Face Recognition System backend.
  */
 
-const API_BASE = "http://localhost:8000/api";
+const API_BASE = "http://192.168.0.169:8000/api";
 
 /**
  * Register a new user with a face image.
