@@ -1,17 +1,18 @@
 import { useRef, useCallback, useState } from 'react'
 import Webcam from 'react-webcam'
-import { Camera, CameraOff, RotateCcw } from 'lucide-react'
-
-const videoConstraints = {
-  width: 480,
-  height: 360,
-  facingMode: 'user',
-}
+import { Camera, CameraOff, RotateCcw, RefreshCw } from 'lucide-react'
 
 export default function WebcamCapture({ onCapture, disabled = false }) {
   const webcamRef = useRef(null)
   const [isOn, setIsOn] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null)
+  const [facingMode, setFacingMode] = useState('user')
+
+  const videoConstraints = {
+    width: { ideal: 1280 },
+    height: { ideal: 720 },
+    facingMode: facingMode,
+  }
 
   const handleCapture = useCallback(() => {
     if (!webcamRef.current) return
@@ -25,6 +26,10 @@ export default function WebcamCapture({ onCapture, disabled = false }) {
   const handleRetake = () => {
     setCapturedImage(null)
     onCapture?.(null)
+  }
+
+  const toggleCamera = () => {
+    setFacingMode(prev => prev === 'user' ? 'environment' : 'user')
   }
 
   if (!isOn) {
@@ -67,7 +72,7 @@ export default function WebcamCapture({ onCapture, disabled = false }) {
           screenshotFormat="image/jpeg"
           screenshotQuality={0.92}
           videoConstraints={videoConstraints}
-          mirrored={true}
+          mirrored={facingMode === 'user'}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
         <div className="face-guide">
@@ -75,14 +80,18 @@ export default function WebcamCapture({ onCapture, disabled = false }) {
         </div>
         <div className="webcam-scan-line" />
       </div>
-      <div className="mt-md" style={{ display: 'flex', gap: '8px' }}>
-        <button className="btn btn-primary" onClick={handleCapture} disabled={disabled}>
+      <div className="mt-md" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+        <button className="btn btn-primary" onClick={handleCapture} disabled={disabled} style={{ flex: 1 }}>
           <Camera size={16} />
           Capture
         </button>
+        <button className="btn btn-secondary" onClick={toggleCamera} title="Switch Camera">
+          <RefreshCw size={16} />
+          Switch
+        </button>
         <button className="btn btn-ghost" onClick={() => { setIsOn(false); setCapturedImage(null); onCapture?.(null) }}>
           <CameraOff size={16} />
-          Turn Off
+          Off
         </button>
       </div>
     </div>

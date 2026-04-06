@@ -14,19 +14,19 @@ export default function Navbar() {
         <div className="navbar-links">
           <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             <ScanFace size={16} />
-            Dashboard
+            <span>Dashboard</span>
           </NavLink>
           <NavLink to="/register" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             <UserPlus size={16} />
-            Register
+            <span>Register</span>
           </NavLink>
           <NavLink to="/verify" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             <ShieldCheck size={16} />
-            Verify
+            <span>Verify</span>
           </NavLink>
           <NavLink to="/users" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
             <Users size={16} />
-            Users
+            <span>Users</span>
           </NavLink>
         </div>
       </div>

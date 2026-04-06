@@ -543,8 +543,33 @@ img {
 @media (max-width: 600px) {
   .grid-3 { grid-template-columns: 1fr; }
   .app-main { padding: var(--space-md); }
-  .navbar-links { gap: 0; }
-  .nav-link { padding: 6px 10px; font-size: 0.8rem; }
+  .navbar-links { gap: 4px; }
+  .nav-link { 
+    padding: 8px; 
+    font-size: 0; /* Hide text, show icon only */
+  }
+  .nav-link span { display: none; }
+  .nav-link svg { margin: 0 !important; width: 20px; height: 20px; }
+  
+  .page-title { font-size: 1.5rem; }
+  .card { padding: var(--space-md); }
+  
+  /* Make table scrollable on mobile */
+  .card[style*="padding: 0"] {
+    overflow-x: auto;
+  }
+  .user-table {
+    min-width: 600px;
+  }
+  
+  .webcam-container {
+    max-width: 100%;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
 }
 
 /* ── Page headers ───────────────────────────────────────── */
