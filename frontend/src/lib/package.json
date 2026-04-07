@@ -1,0 +1,32 @@
+{
+  "name": "@farhanbshafiq/faceguard-sdk",
+  "version": "1.0.1",
+  "description": "Professional Face Recognition Biometric SDK with Anti-Spoofing.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FarhanBinShafiq/FaceGuard.git"
+  },
+  "homepage": "https://github.com/FarhanBinShafiq/FaceGuard#readme",
+
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*"
+  ],
+  "keywords": [
+    "face-recognition",
+    "biometric",
+    "security",
+    "liveness-detection",
+    "react",
+    "vanilla-js"
+  ],
+  "author": "Farhan",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-webcam": "^7.0.0",
+    "lucide-react": "^0.300.0"
+  }
+}

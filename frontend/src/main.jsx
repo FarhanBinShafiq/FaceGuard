@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import { FaceGuardProvider } from './lib'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <FaceGuardProvider baseUrl="/api">
+        <App />
+      </FaceGuardProvider>
     </BrowserRouter>
   </StrictMode>,
 )
