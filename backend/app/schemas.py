@@ -13,6 +13,7 @@ class RegisterRequest(BaseModel):
     """Registration request (image sent as form data, name as field)."""
     name: str = Field(..., min_length=1, max_length=255, description="User's full name")
     email: Optional[str] = Field(None, description="Optional email address")
+    role: Optional[str] = Field("customer", description="customer, staff, vip, blacklisted")
 
 
 class RegisterResponse(BaseModel):
@@ -24,6 +25,7 @@ class RegisterResponse(BaseModel):
     confidence: Optional[float] = None
     age: Optional[int] = None
     gender: Optional[str] = None
+    role: Optional[str] = None
 
 
 # ── Verification ─────────────────────────────────────────
@@ -38,6 +40,7 @@ class VerifyResponse(BaseModel):
     distance: Optional[float] = None
     anti_spoof_score: Optional[float] = None
     is_real_face: bool = True
+    role: Optional[str] = None
 
 
 # ── User Management ─────────────────────────────────────
@@ -50,6 +53,7 @@ class UserOut(BaseModel):
     image_path: Optional[str] = None
     age: Optional[int] = None
     gender: Optional[str] = None
+    role: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -107,3 +111,24 @@ class CrowdAnalysisResponse(BaseModel):
     total_faces: int
     faces: list[FaceAnalysisInfo]
     timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class AuditLogOut(BaseModel):
+    """Audit log entry."""
+    id: str
+    event_type: str
+    status: str
+    user_id: Optional[str] = None
+    user_name: Optional[str] = None
+    confidence: Optional[str] = None
+    timestamp: datetime
+    snapshot_path: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class AuditListResponse(BaseModel):
+    """List of audit logs."""
+    total: int
+    logs: list[AuditLogOut]

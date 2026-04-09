@@ -152,6 +152,16 @@ export async function analyzeCrowdBase64(base64Image) {
 }
 
 /**
+ * Get system audits.
+ */
+export async function getAudits(limit = 50, offset = 0) {
+  const res = await fetch(`${API_BASE}/audits?limit=${limit}&offset=${offset}`);
+  const data = await res.json();
+  if (!res.ok) throw { status: res.status, ...data };
+  return data;
+}
+
+/**
  * Get user's face image URL.
  */
 export function getUserImageUrl(userId) {

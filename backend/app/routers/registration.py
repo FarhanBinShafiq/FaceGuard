@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from app.database import get_db
-from app.models import User
+from app.models import User, AuditLog
 from app.schemas import RegisterResponse, ErrorResponse
 from app.services.face_service import get_face_service
 from app.services.anti_spoof import get_anti_spoof_service
@@ -38,6 +38,7 @@ router = APIRouter(prefix="/api", tags=["Registration"])
 async def register_user(
     name: str = Form(..., description="User's full name"),
     email: Optional[str] = Form(None, description="Optional email address"),
+    role: str = Form("customer", description="customer, staff, vip, blacklisted"),
     image: Optional[UploadFile] = File(None, description="Face image file"),
     image_base64: Optional[str] = Form(None, description="Base64-encoded face image"),
     db: Session = Depends(get_db),
@@ -117,6 +118,7 @@ async def register_user(
             embedding=embedding.tobytes(),
             age=str(user_age) if user_age else None,
             gender=user_gender,
+            role=role,
         )
 
         # Save face image
@@ -124,13 +126,24 @@ async def register_user(
         user.image_path = image_path
 
         db.add(user)
+        
+        # Log event
+        log = AuditLog(
+            event_type="register",
+            status="success",
+            user_id=user.id,
+            user_name=user.name,
+            snapshot_path=image_path
+        )
+        db.add(log)
+        
         db.commit()
         db.refresh(user)
 
         # ── 8. Add to FAISS index ──
         store.add_embedding(user.id, embedding)
 
-        logger.info(f"Registered user: {user.name} (ID: {user.id}), Age: {user_age}, Gender: {user_gender}")
+        logger.info(f"Registered user: {user.name} (ID: {user.id}), Role: {role}")
 
         return RegisterResponse(
             success=True,
@@ -140,6 +153,7 @@ async def register_user(
             confidence=round(spoof_score, 4),
             age=user_age,
             gender=user_gender,
+            role=user.role,
         )
 
     except HTTPException:

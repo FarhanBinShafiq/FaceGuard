@@ -5,6 +5,8 @@ import RegisterPage from './pages/RegisterPage'
 import VerifyPage from './pages/VerifyPage'
 import UsersPage from './pages/UsersPage'
 import AnalyticsPage from './pages/AnalyticsPage'
+import AuditPage from './pages/AuditPage'
+import LockDemoPage from './pages/LockDemoPage'
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
           <Route path="/verify" element={<VerifyPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
+          <Route path="/audits" element={<AuditPage />} />
+          <Route path="/vault" element={<LockDemoPage />} />
         </Routes>
       </main>
     </div>

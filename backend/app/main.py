@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
 from app.database import init_db
-from app.routers import registration, verification, users, analytics
+from app.routers import registration, verification, users, analytics, audits
 
 # ── Logging ──────────────────────────────────────────────
 logging.basicConfig(
@@ -78,6 +78,7 @@ app.include_router(registration.router)
 app.include_router(verification.router)
 app.include_router(users.router)
 app.include_router(analytics.router)
+app.include_router(audits.router)
 
 
 # ── Root ─────────────────────────────────────────────────

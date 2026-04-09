@@ -1,12 +1,20 @@
 import { useState } from 'react'
 import { ShieldCheck, UserCheck, ShieldAlert, RotateCcw } from 'lucide-react'
 import { FaceGuardAuth } from '../lib'
+import { speechService } from '../services/speech'
 
 export default function VerifyPage() {
   const [result, setResult] = useState(null)
 
   const handleSuccess = (data) => {
     setResult(data)
+    if (data.status === 'registered_user') {
+      speechService.welcome(data.name)
+    } else if (data.status === 'spoof_detected') {
+      speechService.spoofDetected()
+    } else {
+      speechService.accessDenied()
+    }
   }
 
   const handleReset = () => {
