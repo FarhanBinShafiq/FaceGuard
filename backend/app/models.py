@@ -19,6 +19,8 @@ class User(Base):
     email = Column(String(255), nullable=True, unique=True)
     embedding = Column(LargeBinary, nullable=False)  # 512-d float32 → 2048 bytes
     image_path = Column(Text, nullable=True)
+    age = Column(String(50), nullable=True)
+    gender = Column(String(50), nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
         DateTime,

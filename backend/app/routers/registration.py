@@ -106,10 +106,17 @@ async def register_user(
                 raise HTTPException(status_code=409, detail=f"Email '{email}' is already registered.")
 
         # ── 7. Create user ──
+        # Extract age/gender
+        attrs = face_service.get_face_attributes(face)
+        user_age = attrs.get("age")
+        user_gender = attrs.get("gender")
+
         user = User(
             name=name,
             email=email,
             embedding=embedding.tobytes(),
+            age=str(user_age) if user_age else None,
+            gender=user_gender,
         )
 
         # Save face image
@@ -123,7 +130,7 @@ async def register_user(
         # ── 8. Add to FAISS index ──
         store.add_embedding(user.id, embedding)
 
-        logger.info(f"Registered user: {user.name} (ID: {user.id})")
+        logger.info(f"Registered user: {user.name} (ID: {user.id}), Age: {user_age}, Gender: {user_gender}")
 
         return RegisterResponse(
             success=True,
@@ -131,6 +138,8 @@ async def register_user(
             user_id=user.id,
             name=user.name,
             confidence=round(spoof_score, 4),
+            age=user_age,
+            gender=user_gender,
         )
 
     except HTTPException:

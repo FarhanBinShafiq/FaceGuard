@@ -150,6 +150,27 @@ export default function Dashboard() {
             </p>
           </div>
         </Link>
+        <Link to="/analytics" style={{ textDecoration: 'none' }}>
+          <div className="card" style={{ cursor: 'pointer' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: 12,
+                background: 'linear-gradient(135deg, rgba(255,107,107,0.15), rgba(255,107,107,0.05))',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '1px solid rgba(255,107,107,0.2)'
+              }}>
+                <Activity size={22} color="#FF6B6B" />
+              </div>
+              <div>
+                <h3 style={{ fontWeight: 700, color: 'var(--text-primary)' }}>Supermarket Mode</h3>
+                <p className="text-sm text-muted">Crowd analysis & demographics</p>
+              </div>
+            </div>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              Experience real-time crowd detection, age estimation, and gender distribution for retail environments.
+            </p>
+          </div>
+        </Link>
       </div>
 
       {/* System Info */}

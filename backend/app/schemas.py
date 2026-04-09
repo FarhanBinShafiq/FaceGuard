@@ -22,6 +22,8 @@ class RegisterResponse(BaseModel):
     user_id: Optional[str] = None
     name: Optional[str] = None
     confidence: Optional[float] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
 
 
 # ── Verification ─────────────────────────────────────────
@@ -46,6 +48,8 @@ class UserOut(BaseModel):
     name: str
     email: Optional[str] = None
     image_path: Optional[str] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
@@ -83,3 +87,23 @@ class ErrorResponse(BaseModel):
     success: bool = False
     error: str
     detail: Optional[str] = None
+
+
+# ── Supermarket Analytics ───────────────────────────────
+
+class FaceAnalysisInfo(BaseModel):
+    """Information for a single detected face."""
+    id: int
+    bbox: list[float]
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    confidence: float
+    matched_name: Optional[str] = None
+    matched_id: Optional[str] = None
+
+
+class CrowdAnalysisResponse(BaseModel):
+    """Response for crowd/supermarket analysis."""
+    total_faces: int
+    faces: list[FaceAnalysisInfo]
+    timestamp: datetime = Field(default_factory=datetime.now)

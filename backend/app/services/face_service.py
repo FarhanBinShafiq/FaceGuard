@@ -28,6 +28,7 @@ class FaceService:
             return
         self._initialized = True
         logger.info("Initializing InsightFace model (buffalo_l)...")
+        # Ensure 'age' and 'gender' are part of the models used
         self.app = FaceAnalysis(
             name="buffalo_l",
             providers=["CPUExecutionProvider"],

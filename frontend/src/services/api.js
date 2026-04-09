@@ -135,6 +135,23 @@ export async function getStats() {
 }
 
 /**
+ * Perform crowd analysis (multi-face + attributes) from webcam.
+ */
+export async function analyzeCrowdBase64(base64Image) {
+  const formData = new FormData();
+  formData.append("image_base64", base64Image);
+
+  const res = await fetch(`${API_BASE}/analytics/crowd`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw { status: res.status, ...data };
+  return data;
+}
+
+/**
  * Get user's face image URL.
  */
 export function getUserImageUrl(userId) {
