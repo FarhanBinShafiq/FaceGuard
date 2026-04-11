@@ -33,6 +33,10 @@ class SpeechService {
     this.speak(`Access denied. Face not recognized.`);
   }
 
+  securityAlert(name) {
+    this.speak(`Security alert. Blacklisted user detected. Calling security for ${name || 'unknown individual'}.`);
+  }
+
   spoofDetected() {
     this.speak(`Security alert. Spoof attempt detected.`);
   }

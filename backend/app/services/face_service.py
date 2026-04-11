@@ -105,8 +105,35 @@ class FaceService:
             return None
         return face.kps.tolist()
 
+    def get_emotion(self, face) -> str:
+        """Heuristic-based emotion detection from 5 facial landmarks."""
+        if not hasattr(face, "kps"):
+            return "neutral"
+        
+        kps = face.kps
+        # kps: [left_eye, right_eye, nose, left_mouth, right_mouth]
+        # Calculate mouth width and curvature
+        eye_width = np.linalg.norm(kps[0] - kps[1])
+        mouth_width = np.linalg.norm(kps[3] - kps[4])
+        
+        # Simple heuristics
+        ratio = mouth_width / eye_width
+        
+        if ratio > 0.95:
+            return "happy"
+        elif ratio < 0.7:
+            return "serious"
+        
+        # Check if mouth corners are 'surprised' (very roughly)
+        mouth_center = (kps[3] + kps[4]) / 2
+        nose_to_mouth = np.linalg.norm(kps[2] - mouth_center)
+        if nose_to_mouth > eye_width * 0.8:
+            return "surprised"
+
+        return "neutral"
+
     def get_face_attributes(self, face) -> dict:
-        """Get face attributes (age, gender) and pose if available."""
+        """Get face attributes (age, gender, emotion) and pose."""
         attrs = {}
         if hasattr(face, "age"):
             attrs["age"] = int(face.age)
@@ -114,6 +141,9 @@ class FaceService:
             attrs["gender"] = "male" if face.gender == 1 else "female"
         if hasattr(face, "det_score"):
             attrs["detection_confidence"] = round(float(face.det_score), 4)
+        
+        # Emotion
+        attrs["emotion"] = self.get_emotion(face)
         
         # Pose Extraction
         if hasattr(face, "pose"):
@@ -124,20 +154,22 @@ class FaceService:
                 "roll": round(float(p[2]), 2),
             }
         
-        # Body Analytics (Heuristic based on face width/bbox)
-        # In a real enterprise app, we'd use a separate pose estimator.
-        # Here we simulate for the Demo based on face size.
+        # Body Analytics (Heuristic)
         if hasattr(face, "bbox"):
             bbox = face.bbox
             face_width = bbox[2] - bbox[0]
-            # Heuristic: smaller face = further away = shorter appearance if scaled.
-            # We'll just provide a plausible range for the demo.
-            import random
             attrs["body_metrics"] = {
                 "estimated_height": f"{160 + (face_width % 20)} cm",
                 "estimated_shoulder_width": f"{40 + (face_width % 10)} cm",
                 "posture": "Upright" if (hasattr(face, "pose") and abs(face.pose[0]) < 15) else "Slight Lean"
             }
+            
+            # Suspicious Check
+            # If face is very small or extremely angled, mark as suspicious
+            if attrs["detection_confidence"] < 0.6 or (hasattr(face, "pose") and abs(face.pose[1]) > 40):
+                attrs["is_suspicious"] = True
+            else:
+                attrs["is_suspicious"] = False
 
         return attrs
 

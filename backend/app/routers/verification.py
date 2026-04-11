@@ -104,9 +104,17 @@ async def verify_face(
         distance = 1.0 - similarity if similarity > 0 else 1.0
 
         # ── 6. Build response ──
+        emotion = face_service.get_emotion(face)
+        alert_triggered = False
+
         if matched_user_id:
             user = db.query(User).filter(User.id == matched_user_id).first()
             if user:
+                # Blacklist Check
+                if user.role == "blacklisted":
+                    alert_triggered = True
+                    logger.warning(f"🚨 ALERT: Blacklisted user detected: {user.name}")
+
                 logger.info(f"Verified: {user.name} (Role: {user.role}, similarity: {similarity:.4f})")
                 
                 # Log success
@@ -115,7 +123,8 @@ async def verify_face(
                     status="success",
                     user_id=user.id,
                     user_name=user.name,
-                    confidence=str(round(similarity, 4))
+                    confidence=str(round(similarity, 4)),
+                    is_alert="true" if alert_triggered else "false"
                 )
                 db.add(log)
                 db.commit()
@@ -129,7 +138,9 @@ async def verify_face(
                     distance=round(distance, 4),
                     anti_spoof_score=round(spoof_score, 4),
                     is_real_face=True,
-                    role=user.role
+                    role=user.role,
+                    emotion=emotion,
+                    alert_triggered=alert_triggered
                 )
 
         logger.info(f"No match found (best similarity: {similarity:.4f})")
@@ -150,7 +161,9 @@ async def verify_face(
             distance=round(distance, 4) if similarity > 0 else None,
             anti_spoof_score=round(spoof_score, 4),
             is_real_face=True,
-            role="unknown"
+            role="unknown",
+            emotion=emotion,
+            alert_triggered=False
         )
 
     except HTTPException:

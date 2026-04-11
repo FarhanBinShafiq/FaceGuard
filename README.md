@@ -11,13 +11,15 @@ Whether it's securing an enterprise vault, monitoring supermarket crowd demograp
 ### 🔐 1. Enterprise Security (Pro)
 *   **Audit Logging:** Automatic snapshots and detailed logs for every verification attempt.
 *   **User Roles:** Granular access control (VIP, Staff, Customer, Blacklisted).
+*   **Smart Alerts:** Real-time visual and voice alerts for Blacklisted individuals.
 *   **Biometric Vault:** Secure personal storage accessible only via face authentication.
 *   **Voice Analytics:** Real-time AI voice feedback for success/failure events.
 
 ### 📊 2. Supermarket & Crowd Analytics
 *   **Multi-Face Analysis:** Detect and analyze entire crowds in a single frame.
 *   **Demographics:** Real-time Age and Gender estimation.
-*   **Body Metrics & Pose:** Heuristic-based height estimation, shoulder width analysis, and 3D head pose tracking (Pitch, Yaw, Roll).
+*   **Mood Analysis:** Real-time Emotion Detection (Happy, Neutral, Serious, Surprised).
+*   **Body Metrics & Pose:** Heuristic-based height estimation, shoulder width analysis, and 3D head pose tracking.
 *   **VIP Identification:** Automatically flag registered customers in live crowd streams.
 
 ### 🛡️ 3. Multi-Layer Anti-Spoofing

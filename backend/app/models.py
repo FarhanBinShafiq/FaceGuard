@@ -41,6 +41,7 @@ class AuditLog(Base):
     user_id = Column(String(36), nullable=True)
     user_name = Column(String(255), nullable=True)
     confidence = Column(String(50), nullable=True)
+    is_alert = Column(String(10), default="false") # "true" or "false"
     timestamp = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     snapshot_path = Column(Text, nullable=True)
 

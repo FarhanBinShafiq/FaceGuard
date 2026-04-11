@@ -41,6 +41,8 @@ class VerifyResponse(BaseModel):
     anti_spoof_score: Optional[float] = None
     is_real_face: bool = True
     role: Optional[str] = None
+    emotion: Optional[str] = None
+    alert_triggered: bool = False
 
 
 # ── User Management ─────────────────────────────────────
@@ -101,6 +103,7 @@ class FaceAnalysisInfo(BaseModel):
     bbox: list[float]
     age: Optional[int] = None
     gender: Optional[str] = None
+    emotion: Optional[str] = None # happy, sad, angry, surprised, neutral
     confidence: float
     pose: Optional[dict] = None  # {roll, pitch, yaw}
     body_metrics: Optional[dict] = None # {estimated_height, estimated_shoulder_width}
@@ -123,6 +126,7 @@ class AuditLogOut(BaseModel):
     user_id: Optional[str] = None
     user_name: Optional[str] = None
     confidence: Optional[str] = None
+    is_alert: bool = False
     timestamp: datetime
     snapshot_path: Optional[str] = None
 

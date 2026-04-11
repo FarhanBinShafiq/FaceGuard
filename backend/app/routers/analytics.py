@@ -88,6 +88,7 @@ async def analyze_crowd(
                 bbox=bbox,
                 age=attrs.get("age"),
                 gender=attrs.get("gender"),
+                emotion=attrs.get("emotion"),
                 confidence=attrs.get("detection_confidence", 0.0),
                 pose=attrs.get("pose"),
                 body_metrics=attrs.get("body_metrics"),
