@@ -35,3 +35,6 @@ build/
 
 # InsightFace model cache
 ~/.insightface/
+
+# Scratch
+scratch/

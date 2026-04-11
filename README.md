@@ -23,9 +23,23 @@ Whether it's securing an enterprise vault, monitoring supermarket crowd demograp
 *   **VIP Identification:** Automatically flag registered customers in live crowd streams.
 
 ### 🛡️ 3. Multi-Layer Anti-Spoofing
-*   **Texture & Frequency Check:** Protects against photo and high-res screen attacks.
-*   **Moiré Pattern Detection:** Detects screen-refresh artifacts using FFT.
+*   **Texture Analysis:** LBP Variance check to distinguish human skin from printed ink.
+*   **Frequency Analysis:** Laplacian variance to detect screen refresh artifacts and blur-based spoofing.
+*   **Moiré Pattern Detection:** FFT-based periodic artifact detection for high-res screen attacks.
 *   **Color-Space Analysis:** Validates skin-tone distributions in specialized YCrCb space.
+
+---
+
+## 🔧 Configuration & Tuning
+
+FaceGuard is highly configurable via the `backend/.env` file. Proper tuning of these values ensures the best balance between security and UX:
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `SIMILARITY_THRESHOLD` | `0.55` | Cosine distance threshold. Lower is stricter. `0.55` is recommended for general use. |
+| `ANTI_SPOOF_ENABLED` | `true` | Toggle the 4-layer liveness detection system. |
+| `LBP_VARIANCE_THRESHOLD`| `30.0` | Sensitivity for texture analysis. |
+| `LAPLACIAN_THRESHOLD` | `50.0` | Sensitivity for frequency/blur detection. |
 
 ---
 
@@ -42,7 +56,7 @@ Whether it's securing an enterprise vault, monitoring supermarket crowd demograp
 *   **[React 19](https://react.dev/):** Modern UI architecture.
 *   **[Lucide React](https://lucide.dev/):** Premium icon set.
 *   **[Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API):** AI Voice Synthesis feedback.
-*   **Industrial Aesthetics:** Custom CSS design system with Glassmorphism, Neon Accents, and Dark Mode.
+*   **Industrial Aesthetics:** Custom CSS design system with Glassmorphism and Neon Accents.
 
 ---
 
@@ -80,7 +94,7 @@ npm run dev
 ---
 
 ## 🐳 Docker Support
-Deploy the entire infrastructure (Backend + Frontend) in one click:
+Deploy the entire infrastructure in one click:
 ```bash
 docker-compose up --build -d
 ```

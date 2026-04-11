@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
       <div className="grid-3" style={{ gridTemplateColumns: '2fr 1fr', gap: 'var(--space-xl)' }}>
         {/* Left: Camera & Overlays */}
         <div className="card" style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
-          <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: '#000' }}>
+          <div id="webcam-container" style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: '#000' }}>
             <Webcam
               audio={false}
               ref={webcamRef}
@@ -85,6 +85,11 @@ export default function AnalyticsPage() {
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             
+            {/* Scanning Effect */}
+            {isAutoScanning && (
+              <div className="scanning-line" />
+            )}
+
             {/* Loading Indicator */}
             {loading && (
               <div style={{
@@ -99,14 +104,39 @@ export default function AnalyticsPage() {
             )}
 
             {/* Bounding Box Overlays */}
-            {results?.faces.map((face, index) => {
-              const [x1, y1, x2, y2] = face.bbox
-              // Since we don't know the exact resolution without extra math, 
-              // we'll just show the tags for now below the camera if we can't map them perfectly.
-              // For a true "Supermarket Level" we'd calculate percentages here.
-              // For this demo, we'll display them as a list on the right.
-              return null
-            })}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+              {results?.faces.map((face, index) => {
+                const [x1, y1, x2, y2] = face.bbox
+                // For a 100% accurate mapping, we'd need the image capture resolution.
+                // However, since objectFit is 'cover', we can estimate using percentages.
+                // Assuming standard 1280x720 or 640x480 capture.
+                // For this demo, we use heuristic mapping (coordinates usually relative to 1024 max-dim from backend).
+                const width = 1024; // Assuming scaled max-dim
+                const height = 1024; 
+                
+                const left = (x1 / width) * 100;
+                const top = (y1 / height) * 100;
+                const boxW = ((x2 - x1) / width) * 100;
+                const boxH = ((y2 - y1) / height) * 100;
+
+                return (
+                  <div key={index} className="face-overlay-box" style={{
+                    left: `${left}%`,
+                    top: `${top}%`,
+                    width: `${boxW}%`,
+                    height: `${boxH}%`,
+                    borderColor: face.matched_id ? 'var(--color-primary)' : 'rgba(255,255,255,0.5)'
+                  }}>
+                    <div className="face-tag">
+                      <div className="tag-name">{face.matched_name || 'UNKNOWN'}</div>
+                      <div className="tag-details">
+                        {face.gender?.charAt(0).toUpperCase()} • {face.age} • {face.emotion?.toUpperCase()}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
           
           <div className="p-lg flex-between">

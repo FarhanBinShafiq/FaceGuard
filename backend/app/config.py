@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = f"sqlite:///{BASE_DIR / 'data' / 'facerecog.db'}"
 
     # ── Face Recognition ─────────────────────────────────
-    SIMILARITY_THRESHOLD: float = 0.45  # cosine distance threshold (lower = stricter)
+    SIMILARITY_THRESHOLD: float = 0.55  # cosine distance threshold (lower = stricter)
     FACE_DETECTION_CONFIDENCE: float = 0.5
     EMBEDDING_DIM: int = 512
     MAX_IMAGE_SIZE: int = 10 * 1024 * 1024  # 10 MB
@@ -37,8 +37,11 @@ class Settings(BaseSettings):
 
     # ── Anti-Spoofing ────────────────────────────────────
     ANTI_SPOOF_ENABLED: bool = True
-    LBP_VARIANCE_THRESHOLD: float = 30.0  # texture variance threshold
-    LAPLACIAN_THRESHOLD: float = 50.0     # blur detection threshold
+    LBP_VARIANCE_SCALER: float = 2000.0  # Divisor for texture variance (lower = higher score)
+    LAPLACIAN_VAR_SCALER: float = 300.0   # Divisor for blur variance (lower = higher score)
+    MOIRE_THRESHOLD: float = 0.7          # FFT high-freq energy threshold
+    LBP_VARIANCE_THRESHOLD: float = 30.0  # Added to match .env
+    LAPLACIAN_THRESHOLD: float = 50.0      # Added to match .env
 
     # ── Security ─────────────────────────────────────────
     API_KEY: str = ""  # Set via env var for production
@@ -47,6 +50,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 settings = Settings()

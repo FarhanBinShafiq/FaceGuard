@@ -134,3 +134,21 @@ async def system_stats(db: Session = Depends(get_db)):
         similarity_threshold=settings.SIMILARITY_THRESHOLD,
         anti_spoof_enabled=settings.ANTI_SPOOF_ENABLED,
     )
+@router.patch(
+    "/users/{user_id}/role",
+    response_model=UserOut,
+    responses={404: {"model": ErrorResponse}},
+    summary="Update user role (e.g., blacklist, vip)",
+)
+async def update_user_role(user_id: str, role: str, db: Session = Depends(get_db)):
+    """Update a user's role and security status."""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    user.role = role
+    db.commit()
+    db.refresh(user)
+
+    logger.info(f"Updated user role: {user.name} -> {role}")
+    return UserOut.model_validate(user)

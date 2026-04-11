@@ -22,8 +22,9 @@ class AntiSpoofService:
     """Basic anti-spoofing using texture and frequency analysis."""
 
     def __init__(self):
-        self.lbp_threshold = settings.LBP_VARIANCE_THRESHOLD
-        self.laplacian_threshold = settings.LAPLACIAN_THRESHOLD
+        self.lbp_scaler = settings.LBP_VARIANCE_SCALER
+        self.laplacian_scaler = settings.LAPLACIAN_VAR_SCALER
+        self.moire_threshold = settings.MOIRE_THRESHOLD
 
     def check_liveness(self, image: np.ndarray, face_bbox: list) -> Tuple[bool, float, dict]:
         """
@@ -111,8 +112,11 @@ class AntiSpoofService:
         variance = float(np.var(lbp))
 
         # Normalize: higher variance → more likely real
-        # Typical real face: variance > 2000, screen/photo: < 1500
-        score = min(1.0, variance / 3000.0)
+        # Typical real face: variance > 1000, screen/photo: < 800
+        score = min(1.0, variance / self.lbp_scaler)
+        # Apply a slight boost for clearly real textures
+        if score > 0.8:
+            score = min(1.0, score * 1.1)
         return score
 
     def _frequency_analysis(self, face_region: np.ndarray) -> float:
@@ -127,12 +131,12 @@ class AntiSpoofService:
 
         # Very blurry images (laplacian_var < 20) are suspicious
         # Normal range: 50-500+
-        if laplacian_var < 20:
-            return 0.2
-        elif laplacian_var > 500:
-            return 0.9
+        if laplacian_var < 15:
+            return 0.1
+        elif laplacian_var > self.laplacian_scaler:
+            return 1.0
         else:
-            return min(1.0, laplacian_var / 400.0)
+            return min(1.0, laplacian_var / self.laplacian_scaler)
 
     def _color_analysis(self, face_region: np.ndarray) -> float:
         """
@@ -150,17 +154,29 @@ class AntiSpoofService:
         cb_std = np.std(cb)
 
         # Human skin in YCrCb: Cr ∈ [133, 173], Cb ∈ [77, 127]
-        cr_in_range = 133 <= cr_mean <= 173
-        cb_in_range = 77 <= cb_mean <= 127
+        # We use a fuzzy logic approach instead of hard binary
+        cr_dist = 0
+        if cr_mean < 133: cr_dist = 133 - cr_mean
+        elif cr_mean > 173: cr_dist = cr_mean - 173
 
-        score = 0.5
-        if cr_in_range and cb_in_range:
-            score += 0.3
-        if cr_std > 5 and cb_std > 5:  # Natural variation
-            score += 0.2
+        cb_dist = 0
+        if cb_mean < 77: cb_dist = 77 - cb_mean
+        elif cb_mean > 127: cb_dist = cb_mean - 127
+
+        # Total distance from "ideal" skin range
+        total_dist = cr_dist + cb_dist
+        
+        # Base score starts at 0.7 if very close to range
+        if total_dist < 5:
+            score = 0.8
+        elif total_dist < 15:
+            score = 0.6
         else:
-            score -= 0.1
+            score = 0.4
 
+        if cr_std > 4 and cb_std > 4:  # Natural variation
+            score += 0.2
+        
         return max(0.0, min(1.0, score))
 
     def _moire_detection(self, face_region: np.ndarray) -> float:
@@ -197,12 +213,12 @@ class AntiSpoofService:
 
         # Moderate high frequency → natural (0.3-0.6)
         # Very high → suspicious moiré patterns
-        if high_freq_ratio > 0.7:
-            return 0.3  # Likely screen capture with moiré
-        elif high_freq_ratio > 0.4:
-            return 0.8  # Normal
+        if high_freq_ratio > self.moire_threshold:
+            return 0.2  # Likely screen capture with moiré
+        elif high_freq_ratio > 0.35:
+            return 1.0  # Perfect range for natural faces
         else:
-            return 0.6  # Low detail, possibly blurry photo
+            return 0.7  # Low detail, possibly blurry photo but not definitely spoof
 
 
 # Module-level singleton

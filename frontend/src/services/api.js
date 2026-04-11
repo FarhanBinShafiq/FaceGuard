@@ -115,6 +115,18 @@ export async function deleteUser(userId) {
 }
 
 /**
+ * Update a user's role.
+ */
+export async function updateUserRole(userId, role) {
+  const res = await fetch(`${API_BASE}/users/${userId}/role?role=${role}`, {
+    method: "PATCH",
+  });
+  const data = await res.json();
+  if (!res.ok) throw { status: res.status, ...data };
+  return data;
+}
+
+/**
  * Get system health.
  */
 export async function getHealth() {

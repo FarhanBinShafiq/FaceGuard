@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { getUsers, deleteUser, getUserImageUrl } from '../services/api'
-import { Users, Trash2, RefreshCw, UserX, Search } from 'lucide-react'
+import { getUsers, deleteUser, getUserImageUrl, updateUserRole } from '../services/api'
+import { Users, Trash2, RefreshCw, UserX, Search, ShieldAlert } from 'lucide-react'
 
 export default function UsersPage() {
   const [users, setUsers] = useState([])
@@ -91,9 +91,10 @@ export default function UsersPage() {
                 <th style={{ width: 60 }}></th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>User ID</th>
+                <th>ID</th>
+                <th>Role</th>
                 <th>Registered</th>
-                <th style={{ width: 80 }}>Actions</th>
+                <th style={{ width: 120 }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -113,25 +114,46 @@ export default function UsersPage() {
                   <td className="text-muted">{user.email || '—'}</td>
                   <td>
                     <code style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--bg-input)', padding: '2px 8px', borderRadius: 4 }}>
-                      {user.id.substring(0, 8)}...
+                      {user.id.substring(0, 8)}
                     </code>
+                  </td>
+                  <td>
+                    <span className={`badge ${user.role === 'blacklisted' ? 'badge-danger' : 'badge-success'}`}>
+                      {user.role?.toUpperCase() || 'CUSTOMER'}
+                    </span>
                   </td>
                   <td className="text-sm text-muted">
                     {user.created_at ? new Date(user.created_at).toLocaleDateString() : '—'}
                   </td>
                   <td>
-                    <button
-                      className="btn btn-icon btn-ghost"
-                      onClick={() => handleDelete(user.id, user.name)}
-                      disabled={deleting === user.id}
-                      title="Delete user"
-                    >
-                      {deleting === user.id ? (
-                        <div className="spinner" />
-                      ) : (
-                        <Trash2 size={16} color="var(--color-danger)" />
-                      )}
-                    </button>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button
+                        className={`btn btn-icon ${user.role === 'blacklisted' ? 'btn-primary' : 'btn-ghost'}`}
+                        onClick={async () => {
+                          const nextRole = user.role === 'blacklisted' ? 'customer' : 'blacklisted'
+                          try {
+                            await updateUserRole(user.id, nextRole)
+                            loadUsers()
+                          } catch (err) { alert(err.detail || 'Update failed') }
+                        }}
+                        title={user.role === 'blacklisted' ? 'Remove from Blacklist' : 'Add to Blacklist'}
+                      >
+                        <ShieldAlert size={16} color={user.role === 'blacklisted' ? '#fff' : 'var(--color-danger)'} />
+                      </button>
+
+                      <button
+                        className="btn btn-icon btn-ghost"
+                        onClick={() => handleDelete(user.id, user.name)}
+                        disabled={deleting === user.id}
+                        title="Delete user"
+                      >
+                        {deleting === user.id ? (
+                          <div className="spinner" />
+                        ) : (
+                          <Trash2 size={16} color="var(--color-danger)" />
+                        )}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
