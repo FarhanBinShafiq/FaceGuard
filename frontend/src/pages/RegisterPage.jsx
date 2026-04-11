@@ -31,7 +31,13 @@ export default function RegisterPage() {
       }
       setResult(data)
     } catch (err) {
-      setError(err.detail || err.message || 'Registration failed')
+      let errorMessage = 'Registration failed'
+      if (err.detail) {
+        errorMessage = typeof err.detail === 'string' ? err.detail : err.detail.message || JSON.stringify(err.detail)
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -58,7 +64,7 @@ export default function RegisterPage() {
           <CheckCircle size={56} color="var(--color-primary)" style={{ margin: '0 auto 16px' }} />
           <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: 8 }}>Registration Successful!</h2>
           <p style={{ color: 'var(--text-secondary)', marginBottom: 20 }}>{result.message}</p>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, maxWidth: 300, margin: '0 auto 24px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, maxWidth: 450, margin: '0 auto 24px' }}>
             <div>
               <span className="text-sm text-muted">Name</span>
               <p style={{ fontWeight: 600 }}>{result.name}</p>
@@ -66,6 +72,14 @@ export default function RegisterPage() {
             <div>
               <span className="text-sm text-muted">Liveness Score</span>
               <p style={{ fontWeight: 600 }}>{(result.confidence * 100).toFixed(1)}%</p>
+            </div>
+            <div>
+              <span className="text-sm text-muted">Detected Age</span>
+              <p style={{ fontWeight: 600 }}>{result.age} yrs</p>
+            </div>
+            <div>
+              <span className="text-sm text-muted">Gender</span>
+              <p style={{ fontWeight: 600, textTransform: 'capitalize' }}>{result.gender}</p>
             </div>
           </div>
           <p className="text-sm text-muted mb-md">User ID: {result.user_id}</p>

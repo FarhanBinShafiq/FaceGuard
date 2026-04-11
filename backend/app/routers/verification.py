@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from app.database import get_db
-from app.models import User
+from app.models import User, AuditLog
 from app.schemas import VerifyResponse, ErrorResponse
 from app.services.face_service import get_face_service
 from app.services.anti_spoof import get_anti_spoof_service
@@ -107,7 +107,19 @@ async def verify_face(
         if matched_user_id:
             user = db.query(User).filter(User.id == matched_user_id).first()
             if user:
-                logger.info(f"Verified: {user.name} (similarity: {similarity:.4f})")
+                logger.info(f"Verified: {user.name} (Role: {user.role}, similarity: {similarity:.4f})")
+                
+                # Log success
+                log = AuditLog(
+                    event_type="verify",
+                    status="success",
+                    user_id=user.id,
+                    user_name=user.name,
+                    confidence=str(round(similarity, 4))
+                )
+                db.add(log)
+                db.commit()
+
                 return VerifyResponse(
                     status="registered_user",
                     message=f"Registered User: {user.name}",
@@ -117,9 +129,20 @@ async def verify_face(
                     distance=round(distance, 4),
                     anti_spoof_score=round(spoof_score, 4),
                     is_real_face=True,
+                    role=user.role
                 )
 
         logger.info(f"No match found (best similarity: {similarity:.4f})")
+        
+        # Log failure
+        log = AuditLog(
+            event_type="verify",
+            status="failed",
+            confidence=str(round(similarity, 4)) if similarity > 0 else None
+        )
+        db.add(log)
+        db.commit()
+
         return VerifyResponse(
             status="new_user",
             message="New User — face not recognized in the database.",
@@ -127,6 +150,7 @@ async def verify_face(
             distance=round(distance, 4) if similarity > 0 else None,
             anti_spoof_score=round(spoof_score, 4),
             is_real_face=True,
+            role="unknown"
         )
 
     except HTTPException:
