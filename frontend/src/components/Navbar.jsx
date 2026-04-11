@@ -9,7 +9,10 @@ export default function Navbar() {
           <div className="brand-icon">
             <ScanFace size={20} color="#0a0e1a" />
           </div>
-          FaceRecog
+          FaceGuard
+          <span className="badge badge-success" style={{ marginLeft: 8, fontSize: '0.65rem' }}>
+            Ultimate SECURE
+          </span>
         </NavLink>
         <div className="navbar-links">
           <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
