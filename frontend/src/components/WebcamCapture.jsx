@@ -49,14 +49,16 @@ export default function WebcamCapture({ onCapture, disabled = false }) {
 
   if (capturedImage) {
     return (
-      <div>
-        <div className="webcam-container active">
-          <img src={capturedImage} alt="Captured face" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      <div className="animate-scale-in">
+        <div className="webcam-viewport verified mb-md">
+          <img src={capturedImage} alt="Captured face" className="webcam-el" />
+          <div className="status-overlay success">
+             <CheckCircle size={48} className="text-success" />
+          </div>
         </div>
-        <div className="mt-md" style={{ display: 'flex', gap: '8px' }}>
-          <button className="btn btn-secondary" onClick={handleRetake}>
-            <RotateCcw size={16} />
-            Retake
+        <div className="flex gap-sm">
+          <button className="btn btn-secondary flex-1" onClick={handleRetake}>
+            <RotateCcw size={16} /> Retake Photo
           </button>
         </div>
       </div>
@@ -64,8 +66,8 @@ export default function WebcamCapture({ onCapture, disabled = false }) {
   }
 
   return (
-    <div>
-      <div className="webcam-container active">
+    <div className="animate-fade-in text-center">
+      <div className="webcam-viewport active mb-md">
         <Webcam
           ref={webcamRef}
           audio={false}
@@ -73,25 +75,24 @@ export default function WebcamCapture({ onCapture, disabled = false }) {
           screenshotQuality={0.92}
           videoConstraints={videoConstraints}
           mirrored={facingMode === 'user'}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          className="webcam-el"
         />
-        <div className="face-guide">
-          <div className="face-guide-circle" />
+        <div className="biometric-hud">
+          <div className="face-target-area">
+             <div className="face-oval" />
+          </div>
         </div>
-        <div className="webcam-scan-line" />
       </div>
-      <div className="mt-md" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-        <button className="btn btn-primary" onClick={handleCapture} disabled={disabled} style={{ flex: 1 }}>
-          <Camera size={16} />
-          Capture
+      <div className="flex flex-wrap gap-sm">
+        <button className="btn btn-primary btn-lg flex-1" onClick={handleCapture} disabled={disabled}>
+          <Camera size={20} />
+          <span>Capture Biometrics</span>
         </button>
-        <button className="btn btn-secondary" onClick={toggleCamera} title="Switch Camera">
-          <RefreshCw size={16} />
-          Switch
+        <button className="btn btn-secondary p-md" onClick={toggleCamera} title="Switch Camera">
+          <RefreshCw size={20} />
         </button>
-        <button className="btn btn-ghost" onClick={() => { setIsOn(false); setCapturedImage(null); onCapture?.(null) }}>
-          <CameraOff size={16} />
-          Off
+        <button className="btn btn-ghost p-md text-danger" onClick={() => { setIsOn(false); setCapturedImage(null); onCapture?.(null) }}>
+          <CameraOff size={20} />
         </button>
       </div>
     </div>
