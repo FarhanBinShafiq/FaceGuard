@@ -102,6 +102,8 @@ class FaceAnalysisInfo(BaseModel):
     age: Optional[int] = None
     gender: Optional[str] = None
     confidence: float
+    pose: Optional[dict] = None  # {roll, pitch, yaw}
+    body_metrics: Optional[dict] = None # {estimated_height, estimated_shoulder_width}
     matched_name: Optional[str] = None
     matched_id: Optional[str] = None
 

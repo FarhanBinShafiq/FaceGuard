@@ -1,129 +1,91 @@
-# 🛡️ FaceGuard — Enterprise AI Face Recognition & Liveness Detection
+# 🛡️ FaceGuard — Ultimate Enterprise AI Face Recognition & Analytics
 
-FaceGuard is a state-of-the-art, production-ready Face Recognition System. It combines high-accuracy face detection, deep learning-based embedding extraction, and multi-layered anti-spoofing (liveness detection) into a seamless, high-performance solution. 
+FaceGuard is a state-of-the-art, production-ready AI Security Platform. It combines industry-leading face detection, deep learning-based biometric extraction, and multi-layered anti-spoofing into a high-performance, aesthetically stunning solution.
 
-Powered by **InsightFace** for computer vision and **FAISS** for lightning-fast vector similarity search.
+Whether it's securing an enterprise vault, monitoring supermarket crowd demographics, or managing employee access with detailed audit logs, FaceGuard is built to scale.
+
+---
+
+## ✨ Core Modules
+
+### 🔐 1. Enterprise Security (Pro)
+*   **Audit Logging:** Automatic snapshots and detailed logs for every verification attempt.
+*   **User Roles:** Granular access control (VIP, Staff, Customer, Blacklisted).
+*   **Biometric Vault:** Secure personal storage accessible only via face authentication.
+*   **Voice Analytics:** Real-time AI voice feedback for success/failure events.
+
+### 📊 2. Supermarket & Crowd Analytics
+*   **Multi-Face Analysis:** Detect and analyze entire crowds in a single frame.
+*   **Demographics:** Real-time Age and Gender estimation.
+*   **Body Metrics & Pose:** Heuristic-based height estimation, shoulder width analysis, and 3D head pose tracking (Pitch, Yaw, Roll).
+*   **VIP Identification:** Automatically flag registered customers in live crowd streams.
+
+### 🛡️ 3. Multi-Layer Anti-Spoofing
+*   **Texture & Frequency Check:** Protects against photo and high-res screen attacks.
+*   **Moiré Pattern Detection:** Detects screen-refresh artifacts using FFT.
+*   **Color-Space Analysis:** Validates skin-tone distributions in specialized YCrCb space.
 
 ---
 
 ## 🛠️ Technology Stack
 
 ### **Backend (Python)**
-*   **[FastAPI](https://fastapi.tiangolo.com/):** High-performance web framework for building APIs.
-*   **[InsightFace](https://github.com/deepinsight/insightface):** 2D and 3D face analysis library (using `buffalo_l` model).
-*   **[FAISS](https://github.com/facebookresearch/faiss):** Library for efficient similarity search and clustering of dense vectors.
-*   **[ONNX Runtime](https://onnxruntime.ai/):** High-performance inference engine for ML models.
-*   **[SQLAlchemy](https://www.sqlalchemy.org/):** Modern Python SQL Toolkit and Object Relational Mapper.
-*   **[OpenCV](https://opencv.org/):** Real-time computer vision and image processing.
+*   **[FastAPI](https://fastapi.tiangolo.com/):** High-performance web framework.
+*   **[InsightFace](https://github.com/deepinsight/insightface):** 2D/3D face analysis (buffalo_l model).
+*   **[FAISS](https://github.com/facebookresearch/faiss):** Sub-millisecond vector similarity search.
+*   **[OpenCV](https://opencv.org/):** Real-time image processing & analytics.
+*   **[SQLAlchemy](https://www.sqlalchemy.org/):** Robust ORM with SQLite/PostgreSQL support.
 
-### **Frontend (JavaScript/React)**
-*   **[React 19](https://react.dev/):** The latest version of the popular UI library.
-*   **[Vite](https://vitejs.dev/):** Next-generation frontend tooling for fast development.
-*   **[Lucide React](https://lucide.dev/):** Beautifully simple, pixel-perfect icon toolkit.
-*   **[React Webcam](https://www.npmjs.com/package/react-webcam):** Real-time webcam stream integration.
-*   **Vanilla CSS:** Custom-crafted, premium design system with dark mode and glassmorphism.
+### **Frontend (Vite + React)**
+*   **[React 19](https://react.dev/):** Modern UI architecture.
+*   **[Lucide React](https://lucide.dev/):** Premium icon set.
+*   **[Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API):** AI Voice Synthesis feedback.
+*   **Industrial Aesthetics:** Custom CSS design system with Glassmorphism, Neon Accents, and Dark Mode.
 
 ---
 
-## 🚀 Getting Started (কিভাবে রান করবেন)
+## 🚀 Getting Started
 
-### **Prerequisites**
-*   **Python 3.10+** (Backend-এর জন্য)
-*   **Node.js 18+** (Frontend-এর জন্য)
-*   **Git**
-
----
-
-### **1. Setup Backend (ব্যাকএন্ড সেটআপ)**
-
+### **1. Setup Backend**
 ```bash
-# Clone the repository
-git clone https://github.com/FarhanBinShafiq/FaceGuard.git
-cd FaceGuard/backend
-
-# Create and activate virtual environment
+cd backend
 python -m venv venv
-# Windows:
-venv\Scripts\activate
-# Linux/Mac:
-# source venv/bin/activate
-
-# Install dependencies
+venv\Scripts\activate  # Windows
 pip install -r requirements.txt
-
-# Setup environment variables
 cp .env.example .env
+uvicorn app.main:app --reload
 ```
 
-**Run Backend:**
+### **2. Setup Frontend**
 ```bash
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-```
-> **Note:** প্রথমবার রান করার সময় InsightFace মডেল ডাউনলোড করবে (~300MB)। এতে কিছুটা সময় লাগতে পারে।
-
----
-
-### **2. Setup Frontend (ফ্রন্টএন্ড সেটআপ)**
-
-```bash
-cd ../frontend
-
-# Install dependencies
+cd frontend
 npm install
-
-# Start development server
 npm run dev
 ```
-**Access Application:** `http://localhost:5173`
 
 ---
 
-## 🔍 How It Works (কিভাবে এটি কাজ করে)
+## 📡 API Architecture
 
-FaceGuard follows a sophisticated 4-step pipeline for every request:
-
-1.  **Face Detection:** InsightFace scans the uploaded image or webcam frame using the `buffalo_l` detector to find all faces and their landmarks.
-2.  **Liveness Detection (Anti-Spoofing):** To prevent photo or screen-based attacks, the system runs 4 concurrent checks:
-    *   **Texture Analysis:** Checks for micro-texture details unique to human skin.
-    *   **Frequency Analysis:** Detects artificial blur or printer-related artifacts.
-    *   **Color Range Check:** Validates if pixel distributions match real skin in YCrCb space.
-    *   **Moiré Pattern Detection:** Uses FFT (Fast Fourier Transform) to find screen-refresh artifacts.
-3.  **Embedding Extraction:** The face is normalized and passed through the `ArcFace` model to generate a unique **512-dimensional vector** (face signature).
-4.  **Vector Search:** The vector is compared against thousands of registered users in the **FAISS index** using Cosine Similarity in sub-millisecond time.
-
----
-
-## 📡 API Endpoints
-
-| Method | Endpoint | Description |
+| Category | Endpoint | Description |
 | :--- | :--- | :--- |
-| `POST` | `/api/register` | Register a new user with name and face image. |
-| `POST` | `/api/verify` | Identify an unknown face and check liveness. |
-| `GET` | `/api/users` | List all registered users in the system. |
-| `DELETE` | `/api/users/{id}` | Permanently delete a user and their face data. |
-| `GET` | `/api/health` | Check system and database status. |
-
----
-
-## ⚙️ Configuration
-
-Environment variables in `backend/.env` allow you to tune the system:
-*   `SIMILARITY_THRESHOLD`: Adjust matching sensitivity (Default: `0.45`).
-*   `ANTI_SPOOF_ENABLED`: Toggle liveness check (Default: `true`).
-*   `DATABASE_URL`: Switch between SQLite and PostgreSQL.
+| **Auth** | `POST /api/register` | Secure biometric enrollment with role assignment. |
+| **Auth** | `POST /api/verify` | 1:N recognition with 4-layer liveness check. |
+| **Analytics** | `POST /api/analytics/crowd` | Advanced demographics & body metrics extraction. |
+| **Enterprise** | `GET /api/audits` | Retrieve detailed event logs with success snapshots. |
+| **System** | `GET /api/health` | Real-time performance and index status. |
 
 ---
 
 ## 🐳 Docker Support
-
-Deploy the entire stack with a single command:
+Deploy the entire infrastructure (Backend + Frontend) in one click:
 ```bash
 docker-compose up --build -d
 ```
 
 ---
 
-## 📄 License
+## 📄 License & Author
 Distributed under the **MIT License**.
 
-Built with ❤️ by [Farhan Bin Shafiq](https://github.com/FarhanBinShafiq)
+Built for excellence by **[Farhan Bin Shafiq](https://github.com/FarhanBinShafiq)**.

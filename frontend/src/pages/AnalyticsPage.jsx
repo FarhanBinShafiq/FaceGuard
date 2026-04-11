@@ -180,8 +180,16 @@ export default function AnalyticsPage() {
                           {face.matched_name || `Unknown #${index + 1}`}
                         </div>
                         <div className="text-xs text-muted">
-                          {face.gender}, ~{face.age} yrs
+                          {face.gender}, ~{face.age} yrs • {face.body_metrics?.posture || 'Detected'}
                         </div>
+                        <div className="text-xs" style={{ color: 'var(--color-primary)', marginTop: 4 }}>
+                           H: {face.body_metrics?.estimated_height} • S: {face.body_metrics?.estimated_shoulder_width}
+                        </div>
+                        {face.pose && (
+                          <div className="text-xs" style={{ opacity: 0.6 }}>
+                            Pose: P{face.pose.pitch}° Y{face.pose.yaw}° R{face.pose.roll}°
+                          </div>
+                        )}
                       </div>
                       <div className="text-xs" style={{ 
                         padding: '2px 8px', 
