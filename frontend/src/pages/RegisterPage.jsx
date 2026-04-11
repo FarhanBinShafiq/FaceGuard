@@ -31,7 +31,13 @@ export default function RegisterPage() {
       }
       setResult(data)
     } catch (err) {
-      setError(err.detail || err.message || 'Registration failed')
+      let errorMessage = 'Registration failed'
+      if (err.detail) {
+        errorMessage = typeof err.detail === 'string' ? err.detail : err.detail.message || JSON.stringify(err.detail)
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

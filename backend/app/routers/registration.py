@@ -96,8 +96,13 @@ async def register_user(
             dup_name = dup_user.name if dup_user else "Unknown"
             raise HTTPException(
                 status_code=409,
-                detail=f"This face is already registered as '{dup_name}' "
-                       f"(similarity: {dup_sim:.2%}). Cannot register duplicate.",
+                detail={
+                    "message": f"This face is already registered as '{dup_name}'.",
+                    "existing_user_id": dup_user_id,
+                    "existing_user_name": dup_name,
+                    "similarity": f"{dup_sim:.2%}",
+                    "suggestion": "If you want to update this profile, use the update endpoint with the provided User ID."
+                }
             )
 
         # ── 6. Check email uniqueness ──
@@ -107,12 +112,17 @@ async def register_user(
                 raise HTTPException(status_code=409, detail=f"Email '{email}' is already registered.")
 
         # ── 7. Create user ──
+        # Generate ID now so we can use it for the image filename
+        import uuid
+        user_id = str(uuid.uuid4())
+
         # Extract age/gender
         attrs = face_service.get_face_attributes(face)
         user_age = attrs.get("age")
         user_gender = attrs.get("gender")
 
         user = User(
+            id=user_id,
             name=name,
             email=email,
             embedding=embedding.tobytes(),
@@ -121,7 +131,7 @@ async def register_user(
             role=role,
         )
 
-        # Save face image
+        # Save face image (now user.id is valid)
         image_path = save_face_image(cv_image, user.id, bbox)
         user.image_path = image_path
 

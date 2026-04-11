@@ -201,7 +201,7 @@ class EmbeddingStore:
         distance = 1.0 - similarity
 
         # Use a stricter threshold for duplicate detection
-        is_duplicate = distance < (self.threshold * 0.7)
+        is_duplicate = distance < self.threshold
         return is_duplicate, user_id if is_duplicate else None, similarity
 
     @property
