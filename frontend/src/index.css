@@ -1284,8 +1284,7 @@ img {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-reveal { 
-/* ── Advanced Biometric HUD Extensions ────────────────── */
+/* Advanced Biometric HUD Extensions */
 
 .hud-readout-top {
   position: absolute;
