@@ -1,6 +1,6 @@
 import { useRef, useCallback, useState } from 'react'
 import Webcam from 'react-webcam'
-import { Camera, CameraOff, RotateCcw, RefreshCw } from 'lucide-react'
+import { Camera, CameraOff, RotateCcw, RefreshCw, CheckCircle } from 'lucide-react'
 
 export default function WebcamCapture({ onCapture, disabled = false }) {
   const webcamRef = useRef(null)

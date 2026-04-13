@@ -4,35 +4,35 @@
 
 /* ── CSS Variables ──────────────────────────────────────── */
 :root {
-  /* Primary palette — Cyber teal / electric blue */
-  --color-primary: #06d6a0;
-  --color-primary-light: #7efccc;
-  --color-primary-dark: #04a67e;
-  --color-primary-glow: rgba(6, 214, 160, 0.3);
+  /* Professional palette — Enterprise Blue / Indigo */
+  --color-primary: #3b82f6;
+  --color-primary-light: #93c5fd;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-glow: rgba(59, 130, 246, 0.2);
 
   /* Accent */
-  --color-accent: #118ab2;
-  --color-accent-light: #4dc4e8;
-  --color-accent-dark: #0b6d8e;
+  --color-accent: #6366f1;
+  --color-accent-light: #a5b4fc;
+  --color-accent-dark: #4338ca;
 
   /* Danger / Warning / Success */
-  --color-danger: #ef476f;
-  --color-danger-light: #f78da7;
-  --color-warning: #ffd166;
-  --color-success: #06d6a0;
+  --color-danger: #ef4444;
+  --color-danger-light: #f87171;
+  --color-warning: #f59e0b;
+  --color-success: #10b981;
 
-  /* Neutrals — Dark theme */
-  --bg-primary: #0a0e1a;
-  --bg-secondary: #111827;
-  --bg-card: #1a1f35;
-  --bg-card-hover: #222845;
-  --bg-input: #151b2e;
-  --bg-overlay: rgba(10, 14, 26, 0.85);
+  /* Neutrals — Professional Slate Theme */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --bg-card-hover: #334155;
+  --bg-input: #0f172a;
+  --bg-overlay: rgba(15, 23, 42, 0.9);
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.1);
-  --border-active: rgba(6, 214, 160, 0.4);
+  --border-active: rgba(59, 130, 246, 0.4);
 
   /* Text */
   --text-primary: #f0f4f8;
@@ -1153,8 +1153,198 @@ img {
   border: 1px solid rgba(6, 214, 160, 0.2);
 }
 
-.text-success-light { color: var(--color-primary-light); }
-.font-black { font-weight: 900; }
-.tracking-tight { letter-spacing: -0.05em; }
-.tracking-widest { letter-spacing: 0.1em; }
+/* ── Premium Design Extensions ─────────────────────────── */
+
+.premium-mesh-bg {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+}
+
+@keyframes mesh-drift {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.2) rotate(10deg); }
+}
+
+.glass-premium {
+  background: rgba(26, 31, 53, 0.4);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+}
+
+.glow-primary {
+  box-shadow: 0 0 30px var(--color-primary-glow);
+}
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, #fff 0%, var(--color-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Corporate Identity Card */
+.identity-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.id-photo-container {
+  position: relative;
+  width: 140px;
+  height: 180px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 0 20px var(--color-primary-glow);
+}
+
+.id-badge-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary);
+  animation: id-scan 3s ease-in-out infinite;
+  z-index: 5;
+}
+
+@keyframes id-scan {
+  0%, 100% { top: 0; opacity: 0; }
+  10%, 90% { opacity: 1; }
+  50% { top: 100%; }
+}
+
+.id-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.id-field {
+  margin-bottom: var(--space-md);
+}
+
+.id-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 2px;
+}
+
+.id-value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.shimmer-border {
+  position: relative;
+  z-index: 1;
+}
+
+.shimmer-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  background-size: 200% 100%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: shimmer-anim 3s infinite linear;
+  opacity: 0.5;
+}
+
+@keyframes shimmer-anim {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Animations */
+.animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-reveal { 
+/* ── Advanced Biometric HUD Extensions ────────────────── */
+
+.hud-readout-top {
+  position: absolute;
+  top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 10;
+}
+
+.hud-readout-top.left { left: var(--space-lg); }
+.hud-readout-top.right { right: var(--space-lg); text-align: right; }
+
+.readout-item {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  font-weight: 900;
+  color: var(--color-primary);
+  opacity: 0.7;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.hud-side-metrics {
+  position: absolute;
+  right: var(--space-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.metric-bar {
+  width: 4px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.metric-bar .fill {
+  width: 100%;
+  background: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary);
+  animation: metric-fluctuate 2s ease-in-out infinite alternate;
+}
+
+@keyframes metric-fluctuate {
+  from { opacity: 0.4; transform: translateY(20%); }
+  to { opacity: 1; transform: translateY(-20%); }
+}
+
+.identity-card-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
 

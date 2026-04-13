@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import Webcam from 'react-webcam';
-import { Camera, CameraOff, RefreshCw, Loader2, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Camera, CameraOff, RefreshCw, Loader2, ShieldCheck, ShieldAlert, ScanFace } from 'lucide-react';
 import { useFaceGuard } from './FaceGuardContext';
 
 /**
@@ -126,8 +126,8 @@ export const FaceGuardAuth = ({ mode = 'verify', onSuccess, onError, config = {}
               <div className="hud-info">
                  <div className="hud-line"></div>
                  <div className="hud-text">
-                   <span className="label">MODE:</span>
-                   <span className="value">{mode.toUpperCase()}</span>
+                   <span className="label">SYSTEM:</span>
+                   <span className="value">SECURE_NODE_01</span>
                  </div>
                  <div className="hud-text">
                    <span className="label">STATUS:</span>
